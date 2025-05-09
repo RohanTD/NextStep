@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Chatbot",
-    "slug": "Chatbot",
+    "name": "NextStep",
+    "slug": "NextStep",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "chatbot",
+    "scheme": "nextstep",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

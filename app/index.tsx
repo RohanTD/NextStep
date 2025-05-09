@@ -1,8 +1,10 @@
+import { classifyUserResponse } from "@/utils/gpt";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
+  Animated,
+  Easing,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -20,6 +22,7 @@ interface Message {
   text: string;
   sender: "user" | "bot";
   timestamp: Date;
+  animValue?: Animated.Value; // For animation
 }
 
 // Main app component
@@ -30,20 +33,87 @@ export default function ChatbotApp() {
       text: "Hello! How can I help you today?",
       sender: "bot",
       timestamp: new Date(),
+      animValue: new Animated.Value(1), // Initial message is already visible
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const flatListRef = useRef<FlatList>(null);
 
+  // Animation values
+  const typingAnimation = useRef(new Animated.Value(0)).current;
+  const sendButtonScale = useRef(new Animated.Value(1)).current;
+
   // Format timestamp to display only hours and minutes
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+  // Animate send button on press
+  const animateSendButton = () => {
+    Animated.sequence([
+      Animated.timing(sendButtonScale, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+        easing: Easing.ease,
+      }),
+      Animated.timing(sendButtonScale, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+        easing: Easing.elastic(1.2),
+      }),
+    ]).start();
+  };
+
+  // Start typing indicator animation
+  useEffect(() => {
+    if (isTyping) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(typingAnimation, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+            easing: Easing.ease,
+          }),
+          Animated.timing(typingAnimation, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true,
+            easing: Easing.ease,
+          }),
+        ])
+      ).start();
+    } else {
+      typingAnimation.setValue(0);
+    }
+  }, [isTyping]);
+
+  // Animate message entrance
+  const animateNewMessage = (newMessage: Message) => {
+    // Create animation value for the new message
+    const animValue = new Animated.Value(0);
+    newMessage.animValue = animValue;
+
+    // Start the animation
+    Animated.timing(animValue, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.back(1.2)),
+    }).start();
+
+    return newMessage;
+  };
+
   // Simulate bot response
   const handleSendMessage = () => {
     if (inputText.trim() === "") return;
+
+    // Animate the send button
+    animateSendButton();
 
     // Add user message
     const userMessage: Message = {
@@ -53,38 +123,30 @@ export default function ChatbotApp() {
       timestamp: new Date(),
     };
 
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    // Animate and add the user message
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      animateNewMessage(userMessage),
+    ]);
     setInputText("");
     setIsTyping(true);
 
     // Simulate bot thinking and responding
-    setTimeout(() => {
+    setTimeout(async () => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: generateBotResponse(inputText),
+        text:  await classifyUserResponse(inputText),
         sender: "bot",
         timestamp: new Date(),
       };
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+      // Animate and add the bot message
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        animateNewMessage(botMessage),
+      ]);
       setIsTyping(false);
     }, 1000 + Math.random() * 2000); // Random delay between 1-3 seconds
-  };
-
-  // Simple bot response generator - replace with actual logic or API call
-  const generateBotResponse = (userInput: string): string => {
-    const lowerInput = userInput.toLowerCase();
-
-    if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
-      return "Hello there! How can I assist you today?";
-    } else if (lowerInput.includes("help")) {
-      return "I'm here to help! Feel free to ask me anything.";
-    } else if (lowerInput.includes("thank")) {
-      return "You're welcome! Is there anything else I can help with?";
-    } else if (lowerInput.includes("bye")) {
-      return "Goodbye! Have a great day!";
-    } else {
-      return "That's an interesting point. Could you tell me more about what you're looking for?";
-    }
   };
 
   // Scroll to bottom when new messages arrive
@@ -100,11 +162,31 @@ export default function ChatbotApp() {
   const renderMessageItem = ({ item }: { item: Message }) => {
     const isBot = item.sender === "bot";
 
+    // Default to 1 if animValue isn't set (for initial messages)
+    const animValue = item.animValue || new Animated.Value(1);
+
     return (
-      <View
+      <Animated.View
         style={[
           styles.messageBubbleContainer,
           isBot ? styles.botMessageContainer : styles.userMessageContainer,
+          {
+            opacity: animValue,
+            transform: [
+              {
+                translateY: animValue.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0],
+                }),
+              },
+              {
+                scale: animValue.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.8, 1],
+                }),
+              },
+            ],
+          },
         ]}
       >
         {/* Profile icon - only for bot messages */}
@@ -150,7 +232,32 @@ export default function ChatbotApp() {
             </View>
           </View>
         )}
-      </View>
+      </Animated.View>
+    );
+  };
+
+  // Create animated dots for the typing indicator
+  const typingDot = (delay: number) => {
+    return (
+      <Animated.View
+        style={[
+          styles.typingDot,
+          {
+            opacity: typingAnimation.interpolate({
+              inputRange: [0, 0.5, 1],
+              outputRange: [0.3, 1, 0.3],
+            }),
+            transform: [
+              {
+                translateY: typingAnimation.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [0, -4, 0],
+                }),
+              },
+            ],
+          },
+        ]}
+      />
     );
   };
 
@@ -164,7 +271,7 @@ export default function ChatbotApp() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>NextStep</Text>
+          <Text style={styles.headerTitle}>AI Assistant</Text>
         </View>
 
         {/* Message List */}
@@ -182,12 +289,13 @@ export default function ChatbotApp() {
             <View style={styles.botAvatar}>
               <Ionicons name="logo-electron" size={16} color="#FFFFFF" />
             </View>
-            <Text style={styles.typingText}>AI is typing</Text>
-            <ActivityIndicator
-              size="small"
-              color="#6E56CF"
-              style={styles.typingDots}
-            />
+            <View style={styles.typingBubble}>
+              <View style={styles.typingDotsContainer}>
+                {typingDot(0)}
+                {typingDot(300)}
+                {typingDot(600)}
+              </View>
+            </View>
           </View>
         )}
 
@@ -203,20 +311,22 @@ export default function ChatbotApp() {
             maxLength={1000}
             onSubmitEditing={handleSendMessage}
           />
-          <TouchableOpacity
-            style={[
-              styles.sendButton,
-              !inputText.trim() && styles.sendButtonDisabled,
-            ]}
-            onPress={handleSendMessage}
-            disabled={!inputText.trim()}
-          >
-            <Ionicons
-              name="send"
-              size={20}
-              color={inputText.trim() ? "#FFFFFF" : "#A8A8A8"}
-            />
-          </TouchableOpacity>
+          <Animated.View style={{ transform: [{ scale: sendButtonScale }] }}>
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                !inputText.trim() && styles.sendButtonDisabled,
+              ]}
+              onPress={handleSendMessage}
+              disabled={!inputText.trim()}
+            >
+              <Ionicons
+                name="send"
+                size={20}
+                color={inputText.trim() ? "#FFFFFF" : "#A8A8A8"}
+              />
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -247,7 +357,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   headerTitle: {
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: "600",
     color: "#111827",
   },
@@ -333,13 +443,27 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginBottom: 8,
   },
-  typingText: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginHorizontal: 8,
+  typingBubble: {
+    backgroundColor: "#E5E7EB",
+    borderRadius: 18,
+    borderBottomLeftRadius: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginLeft: 8,
   },
-  typingDots: {
-    marginLeft: 4,
+  typingDotsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 40,
+    height: 20,
+  },
+  typingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#6B7280",
+    marginHorizontal: 2,
   },
   inputContainer: {
     flexDirection: "row",
