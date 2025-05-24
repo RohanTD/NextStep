@@ -30,7 +30,7 @@ export default function ChatbotApp() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello! How can I help you today?",
+      text: "Hello! I am an AI assistant that can help provide you with social resources. What can I help you with?",
       sender: "bot",
       timestamp: new Date(),
       animValue: new Animated.Value(1), // Initial message is already visible
