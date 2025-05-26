@@ -328,7 +328,7 @@ export default function ChatbotApp() {
             // Required props
             placeholder="Search"
             query={{
-              key: "AIzaSyDQfF7ri0tX-azIe3m9_Jdfx5uKa5EweaE", // REPLACE WITH YOUR ACTUAL API KEY
+              key: API_KEY,
               language: "en",
               types: "geocode",
             }}
