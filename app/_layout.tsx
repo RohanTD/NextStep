@@ -1,9 +1,15 @@
-import ChatScreen from "@/app/index"; // Adjust path if needed
+import ChatScreen from "@/app/chatbot";
+import QuestionnaireScreen from "@/app/survey";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { SafeAreaView, StatusBar } from "react-native";
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  Survey: undefined;
+  NextStep: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function Layout() {
   return (
@@ -11,7 +17,6 @@ export default function Layout() {
       <StatusBar barStyle="light-content" />
       <Stack.Navigator
         screenOptions={{
-          // tabBarActiveTintColor: '#ffd33d',
           headerShadowVisible: false,
           headerTintColor: "#ffffff",
           headerStyle: {
@@ -26,6 +31,7 @@ export default function Layout() {
           headerShown: false,
         }}
       >
+        <Stack.Screen name="Survey" component={QuestionnaireScreen} />
         <Stack.Screen name="NextStep" component={ChatScreen} />
       </Stack.Navigator>
     </SafeAreaView>

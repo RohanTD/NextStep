@@ -1,11 +1,16 @@
-import { classifyUserResponse } from "@/utils/gpt";
+import { SocialResourceSystem } from "@/utils/rag";
 import { Ionicons } from "@expo/vector-icons";
+// import "@react-native-community/geolocation";
+import type { RootStackParamList } from "@/app/_layout";
+import type { RouteProp } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -15,41 +20,64 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import "react-native-get-random-values";
 
-// Message type definition
 interface Message {
   id: string;
   text: string;
   sender: "user" | "bot";
   timestamp: Date;
-  animValue?: Animated.Value; // For animation
+  animValue?: Animated.Value;
 }
 
-// Main app component
+type ChatRouteProp = RouteProp<RootStackParamList, "NextStep">;
+
 export default function ChatbotApp() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      text: "Hello! I am an AI assistant that can help provide you with social resources. What can I help you with?",
-      sender: "bot",
-      timestamp: new Date(),
-      animValue: new Animated.Value(1), // Initial message is already visible
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
+  const [location, setLocation] = useState(""); // <-- New location state
   const [isTyping, setIsTyping] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  // Animation values
+  // navigator.geolocation = require("@react-native-community/geolocation");
+
+  const [system, setSystem] = useState<SocialResourceSystem | null>(null);
+
+  const route = useRoute<ChatRouteProp>();
+  const responses = route.params;
+
+  useEffect(() => {
+    const init = async () => {
+      setIsTyping(true);
+      const sys = await new SocialResourceSystem(responses);
+      setSystem(sys);
+      const firstMessageText = await sys?.handleUserQuery(
+        "first!!!",
+        responses?.location ?? ""
+      );
+      const firstMessage: Message = {
+        id: "1",
+        text:
+          firstMessageText ??
+          "Hello! I am an AI assistant that can help provide you with social resources. Do you need help finding food, housing, employment, education, healtchare, or other resources?",
+        sender: "bot",
+        timestamp: new Date(),
+        animValue: new Animated.Value(1), // Initial message is already visible
+      };
+      setMessages([firstMessage]);
+      setIsTyping(false);
+    };
+    init();
+  }, []);
+
   const typingAnimation = useRef(new Animated.Value(0)).current;
   const sendButtonScale = useRef(new Animated.Value(1)).current;
 
-  // Format timestamp to display only hours and minutes
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Animate send button on press
   const animateSendButton = () => {
     Animated.sequence([
       Animated.timing(sendButtonScale, {
@@ -67,7 +95,6 @@ export default function ChatbotApp() {
     ]).start();
   };
 
-  // Start typing indicator animation
   useEffect(() => {
     if (isTyping) {
       Animated.loop(
@@ -91,13 +118,10 @@ export default function ChatbotApp() {
     }
   }, [isTyping]);
 
-  // Animate message entrance
   const animateNewMessage = (newMessage: Message) => {
-    // Create animation value for the new message
     const animValue = new Animated.Value(0);
     newMessage.animValue = animValue;
 
-    // Start the animation
     Animated.timing(animValue, {
       toValue: 1,
       duration: 300,
@@ -108,14 +132,12 @@ export default function ChatbotApp() {
     return newMessage;
   };
 
-  // Simulate bot response
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
 
-    // Animate the send button
     animateSendButton();
+    Keyboard.dismiss();
 
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
@@ -123,7 +145,6 @@ export default function ChatbotApp() {
       timestamp: new Date(),
     };
 
-    // Animate and add the user message
     setMessages((prevMessages) => [
       ...prevMessages,
       animateNewMessage(userMessage),
@@ -131,38 +152,68 @@ export default function ChatbotApp() {
     setInputText("");
     setIsTyping(true);
 
-    // Simulate bot thinking and responding
     setTimeout(async () => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text:  await classifyUserResponse(inputText),
+        text:
+          (await system?.handleUserQuery(
+            inputText,
+            responses?.location ?? ""
+          )) || "I'm sorry - I'm having trouble right now. Can you try again?",
         sender: "bot",
         timestamp: new Date(),
       };
-
-      // Animate and add the bot message
       setMessages((prevMessages) => [
         ...prevMessages,
         animateNewMessage(botMessage),
       ]);
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000); // Random delay between 1-3 seconds
+    }, 50);
   };
 
-  // Scroll to bottom when new messages arrive
+  // useEffect(() => {
+  //   if (messages.length > 0) {
+  //     setTimeout(() => {
+  //       flatListRef.current?.scrollToEnd({ animated: true });
+  //     }, 100);
+  //   }
+  // }, [messages]);
+
   useEffect(() => {
     if (messages.length > 0) {
-      setTimeout(() => {
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
+      const lastIndex = messages.length - 1;
+      const lastMessage = messages[lastIndex];
+
+      // Scroll to bot messages only
+      if (lastMessage.sender === "bot") {
+        setTimeout(() => {
+          flatListRef.current?.scrollToIndex({
+            index: lastIndex,
+            animated: true,
+            viewPosition: 0, // Scroll so the message is at the top of the view
+          });
+        }, 100);
+      }
     }
   }, [messages]);
 
-  // Render individual message bubble
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setTimeout(() => {
+          flatListRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   const renderMessageItem = ({ item }: { item: Message }) => {
     const isBot = item.sender === "bot";
-
-    // Default to 1 if animValue isn't set (for initial messages)
     const animValue = item.animValue || new Animated.Value(1);
 
     return (
@@ -189,7 +240,6 @@ export default function ChatbotApp() {
           },
         ]}
       >
-        {/* Profile icon - only for bot messages */}
         {isBot && (
           <View style={styles.avatarContainer}>
             <View style={styles.botAvatar}>
@@ -224,7 +274,6 @@ export default function ChatbotApp() {
           </Text>
         </View>
 
-        {/* Profile icon - only for user messages */}
         {!isBot && (
           <View style={styles.avatarContainer}>
             <View style={styles.userAvatar}>
@@ -236,30 +285,27 @@ export default function ChatbotApp() {
     );
   };
 
-  // Create animated dots for the typing indicator
-  const typingDot = (delay: number) => {
-    return (
-      <Animated.View
-        style={[
-          styles.typingDot,
-          {
-            opacity: typingAnimation.interpolate({
-              inputRange: [0, 0.5, 1],
-              outputRange: [0.3, 1, 0.3],
-            }),
-            transform: [
-              {
-                translateY: typingAnimation.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [0, -4, 0],
-                }),
-              },
-            ],
-          },
-        ]}
-      />
-    );
-  };
+  const typingDot = (delay: number) => (
+    <Animated.View
+      style={[
+        styles.typingDot,
+        {
+          opacity: typingAnimation.interpolate({
+            inputRange: [0, 0.5, 1],
+            outputRange: [0.3, 1, 0.3],
+          }),
+          transform: [
+            {
+              translateY: typingAnimation.interpolate({
+                inputRange: [0, 0.5, 1],
+                outputRange: [0, -4, 0],
+              }),
+            },
+          ],
+        },
+      ]}
+    />
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -271,19 +317,80 @@ export default function ChatbotApp() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>AI Assistant</Text>
+          <Text style={styles.headerTitle}>NextStep</Text>
+          {/* <TextInput
+            value={location}
+            onChangeText={setLocation}
+            placeholder="Location"
+            placeholderTextColor="#9CA3AF"
+          /> */}
+          {/* <GooglePlacesAutocomplete
+            // Required props
+            placeholder="Search"
+            query={{
+              key: "AIzaSyDQfF7ri0tX-azIe3m9_Jdfx5uKa5EweaE", // REPLACE WITH YOUR ACTUAL API KEY
+              language: "en",
+              types: "geocode",
+            }}
+            //Changed props
+            styles={styles.locationInput}
+            currentLocation={true}
+            currentLocationLabel="Current location"
+            debounce={300}
+            GoogleReverseGeocodingQuery={{
+              language: "en",
+              components: "country:us",
+            }}
+            // All other default props explicitly defined
+            autoFillOnNotFound={false}
+            disableScroll={false}
+            enableHighAccuracyLocation={true}
+            enablePoweredByContainer={true}
+            fetchDetails={false}
+            filterReverseGeocodingByTypes={[]}
+            GooglePlacesDetailsQuery={{}}
+            GooglePlacesSearchQuery={{
+              rankby: "distance",
+            }}
+            isRowScrollable={true}
+            keyboardShouldPersistTaps="always"
+            listUnderlayColor="#c8c7cc"
+            listViewDisplayed="auto"
+            keepResultsAfterBlur={false}
+            minLength={1}
+            nearbyPlacesAPI="GooglePlacesSearch"
+            numberOfLines={1}
+            onFail={() => {}}
+            onNotFound={() => {}}
+            onPress={(data, details = null) => {
+              // Handle selection
+              console.log(data, details);
+            }}
+            onTimeout={() =>
+              console.warn("google places autocomplete: request timeout")
+            }
+            predefinedPlaces={[]}
+            predefinedPlacesAlwaysVisible={false}
+            suppressDefaultStyles={false}
+            textInputHide={false}
+            textInputProps={{}}
+            timeout={0}
+          /> */}
         </View>
 
-        {/* Message List */}
         <FlatList
           ref={flatListRef}
           data={messages}
           renderItem={renderMessageItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.messagesList}
+          initialNumToRender={10}
+          onScrollToIndexFailed={(info) => {
+            // Scroll to end as fallback
+            flatListRef.current?.scrollToEnd({ animated: true });
+          }}
         />
 
-        {/* Typing indicator */}
         {isTyping && (
           <View style={styles.typingIndicator}>
             <View style={styles.botAvatar}>
@@ -299,7 +406,7 @@ export default function ChatbotApp() {
           </View>
         )}
 
-        {/* Input Area */}
+        {/* Input */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -308,7 +415,6 @@ export default function ChatbotApp() {
             placeholder="Message AI Assistant..."
             placeholderTextColor="#9CA3AF"
             multiline
-            maxLength={1000}
             onSubmitEditing={handleSendMessage}
           />
           <Animated.View style={{ transform: [{ scale: sendButtonScale }] }}>
@@ -336,7 +442,7 @@ export default function ChatbotApp() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F9FAFB", // Light background color
+    backgroundColor: "#F9FAFB",
   },
   container: {
     flex: 1,
@@ -349,20 +455,25 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E5E7EB",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between", // <-- for spacing
     elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
     color: "#111827",
   },
+  locationInput: {
+    width: 200,
+    height: 32,
+    backgroundColor: "#F3F4F6",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 14,
+    color: "#111827",
+  },
   messagesList: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 5,
     paddingVertical: 12,
   },
   messageBubbleContainer: {

@@ -1,0 +1,403 @@
+[
+    {
+      "id": "1",
+      "name": "Houston Food Bank",
+      "description": "Provides free groceries and meals through a network of community partners.",
+      "category": "food",
+      "services": ["free groceries", "hot meals", "food pantry"],
+      "eligibility": ["low income", "residents of Houston area"],
+      "location": {
+        "address": "535 Portwall St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77029"
+      },
+      "contact": {
+        "phone": "(832) 369-9390",
+        "website": "https://www.houstonfoodbank.org/find-help/find-food/"
+      },
+      "hours": "Varies by location; check website or call for details",
+      "requirements": ["ID may be required at some locations"]
+    },
+    {
+      "id": "2",
+      "name": "Magnificat Houses Inc.",
+      "description": "Offers emergency shelter and transitional housing for homeless individuals.",
+      "category": "housing",
+      "services": ["emergency shelter", "transitional housing", "case management"],
+      "eligibility": ["homeless individuals"],
+      "location": {
+        "address": "1410 Elgin St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77004"
+      },
+      "contact": {
+        "phone": "(713) 529-4231",
+        "website": "https://mhihouston.org/what-we-do/housing/"
+      },
+      "hours": "Mon-Fri 8:30AM-12:00PM for intake interviews",
+      "requirements": ["in-person intake assessment", "ID required"]
+    },
+    {
+      "id": "3",
+      "name": "San José Clinic",
+      "description": "Provides comprehensive healthcare services for uninsured and underinsured individuals.",
+      "category": "healthcare",
+      "services": ["primary care", "dental", "vision", "pharmacy", "behavioral health"],
+      "eligibility": ["uninsured or underinsured individuals"],
+      "location": {
+        "address": "2615 Fannin St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77002"
+      },
+      "contact": {
+        "phone": "(713) 228-9411",
+        "website": "https://www.sanjoseclinic.org/"
+      },
+      "hours": "Mon-Fri 8:00AM-5:00PM",
+      "requirements": ["proof of income", "proof of residency", "ID required"]
+    },
+    {
+      "id": "4",
+      "name": "Workforce Solutions",
+      "description": "Offers job training, employment assistance, and childcare scholarships.",
+      "category": "employment",
+      "services": ["job training", "employment assistance", "childcare scholarships"],
+      "eligibility": ["varies by program; generally low-income individuals seeking employment"],
+      "location": {
+        "address": "Multiple locations across Houston",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": ""
+      },
+      "contact": {
+        "phone": "1-888-469-5627",
+        "website": "https://www.wrksolutions.com/"
+      },
+      "hours": "Mon-Fri 8:00AM-5:00PM",
+      "requirements": ["application process; documentation varies by program"]
+    },
+    {
+      "id": "5",
+      "name": "Harris County RIDES",
+      "description": "Provides subsidized transportation services for eligible residents.",
+      "category": "transportation",
+      "services": ["curb-to-curb transportation", "shared ride", "taxi service"],
+      "eligibility": ["seniors", "people with disabilities", "low-income residents"],
+      "location": {
+        "address": "8410 Lantern Point Dr",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77054"
+      },
+      "contact": {
+        "phone": "(713) 368-7433",
+        "website": "https://rides.harriscountytx.gov/"
+      },
+      "hours": "Mon-Fri 8:00AM-5:00PM",
+      "requirements": ["application process; eligibility documentation required"]
+    },
+    {
+      "id": "6",
+      "name": "BakerRipley Child Care Payment Assistance",
+      "description": "Provides childcare scholarships for eligible families.",
+      "category": "childcare",
+      "services": ["childcare scholarships", "early childhood education support"],
+      "eligibility": ["families with children aged 0-13", "meeting income guidelines"],
+      "location": {
+        "address": "4450 Harrisburg Blvd",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77011"
+      },
+      "contact": {
+        "phone": "(713) 273-3700",
+        "website": "https://bakerripley.org/programs-and-services/child-care-payment-scholarships/"
+      },
+      "hours": "Mon-Fri 8:00AM-5:00PM",
+      "requirements": ["application process; proof of income and residency"]
+    },
+    {
+      "id": "7",
+      "name": "The Harris Center for Mental Health and IDD",
+      "description": "Offers mental health services including crisis intervention and counseling.",
+      "category": "mental_health",
+      "services": ["24/7 crisis line", "counseling", "psychiatric services"],
+      "eligibility": ["residents of Harris County"],
+      "location": {
+        "address": "9401 Southwest Fwy",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77074"
+      },
+      "contact": {
+        "phone": "(713) 970-7000",
+        "website": "https://www.theharriscenter.org/"
+      },
+      "hours": "24/7 for crisis line; other services by appointment",
+      "requirements": ["ID required; intake assessment"]
+    },
+    {
+      "id": "8",
+      "name": "West Oaks Hospital",
+      "description": "Provides substance abuse treatment programs for adults.",
+      "category": "substance_abuse",
+      "services": ["inpatient treatment", "outpatient programs", "detox services"],
+      "eligibility": ["adults seeking substance abuse treatment"],
+      "location": {
+        "address": "6500 Hornwood Dr",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77074"
+      },
+      "contact": {
+        "phone": "(713) 995-0909",
+        "website": "https://westoakshospital.com/programs-services/substance-abuse/"
+      },
+      "hours": "24/7 admissions",
+      "requirements": ["assessment required; insurance or payment arrangements"]
+    },
+    {
+      "id": "9",
+      "name": "Houston Volunteer Lawyers",
+      "description": "Offers free legal services to low-income residents.",
+      "category": "legal",
+      "services": ["civil legal assistance", "family law", "housing issues"],
+      "eligibility": ["low-income residents of Harris County"],
+      "location": {
+        "address": "712 Main St, Suite 2700",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77002"
+      },
+      "contact": {
+        "phone": "(713) 228-0735",
+        "website": "https://www.makejusticehappen.org/"
+      },
+      "hours": "Mon-Fri 9:00AM-5:00PM",
+      "requirements": ["application process; proof of income"]
+    },
+    {
+      "id": "10",
+      "name": "Harris County Department of Education - Adult Education",
+      "description": "Provides adult education programs including GED and ESL classes.",
+      "category": "education",
+      "services": ["GED preparation", "English as a Second Language (ESL)", "adult literacy"],
+      "eligibility": ["adults seeking education services"],
+      "location": {
+        "address": "6300 Irvington Blvd",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77022"
+      },
+      "contact": {
+        "phone": "(713) 692-6216",
+        "website": "https://www.hcde-texas.org/adult-education"
+      },
+      "hours": "Varies by program; contact for details",
+      "requirements": ["registration required; ID may be needed"]
+    },
+    {
+      "id": "11",
+      "name": "Catholic Charities Food Pantries",
+      "description": "Provides emergency food assistance and financial help to families at multiple locations.",
+      "category": "food",
+      "services": ["emergency food", "financial assistance"],
+      "eligibility": ["low-income families"],
+      "location": {
+        "address": "Multiple locations across Houston",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": ""
+      },
+      "contact": {
+        "phone": "(713) 874-6521",
+        "website": "https://catholiccharities.org/foodpantrylocations/"
+      },
+      "hours": "Varies by location; contact for details",
+      "requirements": ["ID may be required", "proof of income"]
+    },
+    {
+      "id": "12",
+      "name": "Harmony House",
+      "description": "Offers permanent supportive housing for chronically homeless individuals.",
+      "category": "housing",
+      "services": ["permanent supportive housing"],
+      "eligibility": ["chronically homeless individuals"],
+      "location": {
+        "address": "602 Girard St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77007"
+      },
+      "contact": {
+        "phone": "(713) 221-6216",
+        "website": "https://harmonyhouse.org/"
+      },
+      "hours": "Contact for intake hours",
+      "requirements": ["intake assessment", "ID required"]
+    },
+    {
+      "id": "13",
+      "name": "Hope Clinic",
+      "description": "Provides affordable healthcare services to individuals of all income levels and backgrounds.",
+      "category": "healthcare",
+      "services": ["primary care", "dental", "vision", "behavioral health"],
+      "eligibility": ["uninsured or underinsured individuals"],
+      "location": {
+        "address": "7001 Corporate Dr, Suite 120",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77036"
+      },
+      "contact": {
+        "phone": "(713) 773-0803",
+        "website": "https://www.hopechc.org/"
+      },
+      "hours": "Mon-Fri 8:00AM-5:00PM",
+      "requirements": ["proof of income", "ID required"]
+    },
+    {
+      "id": "14",
+      "name": "Houston Area Urban League - Workforce Development",
+      "description": "Offers job training and employment assistance programs.",
+      "category": "employment",
+      "services": ["job training", "employment assistance", "resume workshops"],
+      "eligibility": ["varies by program"],
+      "location": {
+        "address": "1301 Texas Ave",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77002"
+      },
+      "contact": {
+        "phone": "(713) 393-8700",
+        "website": "https://www.haul.org/programs/workforce/"
+      },
+      "hours": "Mon-Fri 9:00AM-5:00PM",
+      "requirements": ["application process; documentation varies by program"]
+    },
+    {
+      "id": "15",
+      "name": "Houston Ground Angels",
+      "description": "Provides complimentary ground transportation for patients traveling to medical appointments.",
+      "category": "transportation",
+      "services": ["free transportation to medical appointments"],
+      "eligibility": ["patients traveling for medical care"],
+      "location": {
+        "address": "Multiple locations across Houston",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": ""
+      },
+      "contact": {
+        "phone": "(281) 900-7377",
+        "website": "https://www.findhelp.org/transit/transportation--houston-tx"
+      },
+      "hours": "Varies; contact for details",
+      "requirements": ["advance scheduling required"]
+    },
+    {
+      "id": "16",
+      "name": "Texas Workforce Commission - Child Care Services",
+      "description": "Provides childcare scholarships for eligible families.",
+      "category": "childcare",
+      "services": ["childcare scholarships", "early childhood education support"],
+      "eligibility": ["families meeting income guidelines"],
+      "location": {
+        "address": "Multiple locations across Houston",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": ""
+      },
+      "contact": {
+        "phone": "(800) 252-3646",
+        "website": "https://www.twc.texas.gov/programs/child-care"
+      },
+      "hours": "Mon-Fri 8:00AM-5:00PM",
+      "requirements": ["application process; proof of income and residency"]
+    },
+    {
+      "id": "17",
+      "name": "Crisis Intervention of Houston",
+      "description": "Provides 24/7 crisis and suicide prevention counseling.",
+      "category": "mental_health",
+      "services": ["crisis counseling", "suicide prevention", "support groups"],
+      "eligibility": ["open to all individuals in crisis"],
+      "location": {
+        "address": "P.O. Box 570234",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77257"
+      },
+      "contact": {
+        "phone": "(832) 416-1177",
+        "website": "https://www.crisishotline.org/"
+      },
+      "hours": "24/7",
+      "requirements": ["none"]
+    },
+    {
+      "id": "18",
+      "name": "The Right Step Houston",
+      "description": "Offers substance abuse treatment programs for adults.",
+      "category": "substance_abuse",
+      "services": ["inpatient treatment", "outpatient programs", "detox services"],
+      "eligibility": ["adults seeking substance abuse treatment"],
+      "location": {
+        "address": "902 W Alabama St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77006"
+      },
+      "contact": {
+        "phone": "(713) 528-3709",
+        "website": "https://www.rightsteprehabhouston.com/"
+      },
+      "hours": "24/7 admissions",
+      "requirements": ["assessment required; insurance or payment arrangements"]
+    },
+    {
+      "id": "19",
+      "name": "Lone Star Legal Aid",
+      "description": "Provides free civil legal services to low-income clients.",
+      "category": "legal",
+      "services": ["civil legal assistance", "family law", "housing issues"],
+      "eligibility": ["low-income residents of Harris County"],
+      "location": {
+        "address": "1415 Fannin St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77002"
+      },
+      "contact": {
+        "phone": "(713) 652-0077",
+        "website": "https://www.lonestarlegal.org/"
+      },
+      "hours": "Mon-Fri 9:00AM-5:00PM",
+      "requirements": ["application process; proof of income"]
+    },
+    {
+      "id": "20",
+      "name": "Houston Community College - Adult Education",
+      "description": "Offers adult education programs including GED and ESL classes.",
+      "category": "education",
+      "services": ["GED preparation", "English as a Second Language (ESL)", "adult literacy"],
+      "eligibility": ["adults seeking education services"],
+      "location": {
+        "address": "3100 Main St",
+        "city": "Houston",
+        "state": "TX",
+        "zipCode": "77002"
+      },
+      "contact": {
+        "phone": "(713) 718-5381",
+        "website": "https://www.hccs.edu/programs/adult-education/take-a-txchse-or-esl-class/"
+      },
+      "hours": "Varies by program; contact for details",
+      "requirements": ["registration required; ID may be needed"]
+    }
+  ]
+  
