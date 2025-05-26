@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# NextStep: Social Resource Chatbot
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+NextStep is a cross-platform Expo app that helps underserved patients and community members find local social services such as food, housing, healthcare, employment, and more. Users can chat with an AI assistant to get personalized resource recommendations based on their needs and location.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Conversational AI assistant for social resource navigation
+- Introductory survey to personalize recommendations
+- Resource matching for food, housing, healthcare, employment, legal aid, and more
+- Animated, user-friendly chat interface
+- Built with [Expo](https://expo.dev/) and React Native
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (LTS recommended)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/NextStepChatbot.git
+   cd NextStepChatbot
+   ```
+
+2. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Set up your OpenAI API key:
+
+   - Copy `.env.example` to `.env` and add your `OPENAI_API_KEY` value.
+
+4. Start the development server:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. Open the app in your simulator, device, or web browser as prompted.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- `app/` - Main app screens and navigation
+- `components/` - Reusable UI components
+- `constants/` - App-wide constants (e.g., colors)
+- `hooks/` - Custom React hooks
+- `utils/` - Resource processing and AI logic
+- `assets/` - Static assets (resources, images, fonts)
 
-## Get a fresh project
+## Usage
 
-When you're ready, run:
+1. Complete the intro survey to provide your background and needs.
+2. Chat with the AI assistant to describe what help you’re looking for.
+3. Receive tailored resource recommendations and follow-up questions.
 
-```bash
-npm run reset-project
-```
+## Scripts
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- `npm start` - Start the Expo development server
+- `npm run reset-project` - Reset the project to a blank state
 
-## Learn more
+## Learn More
 
-To learn more about developing your project with Expo, look at the following resources:
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## License
 
-## Join the community
+MIT
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+*This project is for demonstration and educational purposes. Please ensure you comply with privacy and data protection regulations when handling user
